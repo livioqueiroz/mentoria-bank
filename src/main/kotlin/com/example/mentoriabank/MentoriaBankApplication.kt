@@ -10,26 +10,40 @@ class MentoriaBankApplication
 fun main(args: Array<String>) {
     runApplication<MentoriaBankApplication>(*args)
     println("Teste")
+    val teste = Teste("Lívio", "Queiroz")
+    val teste2 = Teste("Lívio", "Queiro")
+    println(teste == teste2)
+    println(teste)
+    println(teste2)
+    val teste3 = teste.copy(sobrenome = "Augusto")
+    println(teste3)
+}
+
+data class Teste(
+    val nome: String,
+    val sobrenome: String
+){
+
 }
 
 class Customer(
-    var id: UUID,
-    var name: String,
-    var CPF: String,
+    val id: UUID,
+    val name: String,
+    val CPF: String,
 )
 
 class Account(
-    var id: UUID,
-    var number: Int,
-    var customer: Customer,
-    var balance: Float,
+    val id: UUID,
+    val number: Int,
+    val customer: Customer,
+    val balance: Float,
 )
 
 class Transaction(
-    var id: UUID,
-    var account: Account,
-    var amount: Float,
-    var type: TransactionType,
+    val id: UUID,
+    val account: Account,
+    val amount: Float,
+    val type: TransactionType,
 )
 
 enum class TransactionType {
@@ -38,3 +52,6 @@ enum class TransactionType {
     PAYMENT,
     TRANSFER
 }
+
+// TODO CRIAR CLASSES DE REPOSITÓRIO PARA Customer, Account e Transaction - Exemplo: CustomerRepository - Anotar como @Component
+// TODO Tentar organizar em camadas/packages
