@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mentoria
+      MYSQL_USER: mentoria
+      MYSQL_PASSWORD: mentoria
+    ports:
+      - "3303:3306"
