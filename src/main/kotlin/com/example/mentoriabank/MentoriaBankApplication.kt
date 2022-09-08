@@ -1,57 +1,51 @@
 package com.example.mentoriabank
 
-import java.util.UUID
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import com.example.mentoriabank.Singleton.ConnectionSingleton
+import com.example.mentoriabank.common.RandomCommon.Companion.getRandomNumber
+import com.example.mentoriabank.dao.AccountDAO
+import com.example.mentoriabank.dao.CustomerDAO
+import com.example.mentoriabank.dao.ExecutorDAO
+import com.example.mentoriabank.dao.TransactionDAO
+import java.sql.SQLException
 
-@SpringBootApplication
-class MentoriaBankApplication
+//@SpringBootApplication
+//class MentoriaBankApplication
 
 fun main(args: Array<String>) {
-    runApplication<MentoriaBankApplication>(*args)
-    println("Teste")
-    val teste = Teste("Lívio", "Queiroz")
-    val teste2 = Teste("Lívio", "Queiro")
-    println(teste == teste2)
-    println(teste)
-    println(teste2)
-    val teste3 = teste.copy(sobrenome = "Augusto")
-    println(teste3)
+//    runApplication<MentoriaBankApplication>(*args)
+
+    try {
+        val connection = ConnectionSingleton.create()
+        val customer = CustomerDAO(ExecutorDAO())
+        val account = AccountDAO(ExecutorDAO(), customer)
+        val transaction = TransactionDAO(connection)
+
+        customer.create()
+        customer.insert(name = "Livio",cpf= getRandomNumber())
+        customer.findById(1)
+
+        account.create()
+        account.insert(1)
+
+        transaction.create()
+        transaction.insert(1, 20)
+
+        connection.close()
+
+    } catch (ex: SQLException) {
+        println(ex.message)
+        ex.printStackTrace()
+    }
 }
+
+
 
 data class Teste(
     val nome: String,
-    val sobrenome: String
-){
+    val sobrenome: String,
+) {
 
 }
+// TODO - 1 fazer melhoria nas querys (eliminar código repetido nas funções)
 
-class Customer(
-    val id: UUID,
-    val name: String,
-    val CPF: String,
-)
-
-class Account(
-    val id: UUID,
-    val number: Int,
-    val customer: Customer,
-    val balance: Float,
-)
-
-class Transaction(
-    val id: UUID,
-    val account: Account,
-    val amount: Float,
-    val type: TransactionType,
-)
-
-enum class TransactionType {
-    DEPOSIT,
-    WITHDRAW,
-    PAYMENT,
-    TRANSFER
-}
-
-// TODO CRIAR CLASSES DE REPOSITÓRIO PARA Customer, Account e Transaction - Exemplo: CustomerRepository - Anotar como @Component
-// TODO Tentar organizar em camadas/packages
+// TODO - 2 CRIAR CLASSES DE REPOSITÓRIO PARA Customer, Account e Transaction - Exemplo: CustomerRepository - Anotar como @Component
