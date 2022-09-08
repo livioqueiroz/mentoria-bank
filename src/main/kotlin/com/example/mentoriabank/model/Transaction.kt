@@ -1,12 +1,9 @@
 package com.example.mentoriabank.model
 
-import com.example.mentoriabank.enum.TransactionType
-import java.util.UUID
-
-class Transaction(
-    val id: UUID,
+data class Transaction(
+    val id: Int,
+    //TODO Aqui era UUID, mudei pra Int para poder realizar as operações
     val account: Account,
     val amount: Float,
-    val type: TransactionType,
-) {
-}
+    val type: String, //Mudei para String, pois não sabia como pegar ENUM do banco
+)
