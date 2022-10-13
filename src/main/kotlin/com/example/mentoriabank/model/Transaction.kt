@@ -5,5 +5,5 @@ data class Transaction(
     //TODO Aqui era UUID, mudei pra Int para poder realizar as operações
     val account: Account,
     val amount: Float,
-    val type: String, //Mudei para String, pois não sabia como pegar ENUM do banco
+    val type: String, //TODO Mudei para String, pois não sabia como pegar ENUM do banco
 )
