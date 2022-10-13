@@ -18,10 +18,10 @@ fun main(args: Array<String>) {
         val connection = ConnectionSingleton.create()
         val customer = CustomerDAO(ExecutorDAO())
         val account = AccountDAO(ExecutorDAO(), customer)
-        val transaction = TransactionDAO(connection)
+        val transaction = TransactionDAO(ExecutorDAO(), account)
 
         customer.create()
-        customer.insert(name = "Livio",cpf= getRandomNumber())
+        customer.insert(name = "Livio", cpf = getRandomNumber())
         customer.findById(1)
 
         account.create()
@@ -39,13 +39,10 @@ fun main(args: Array<String>) {
 }
 
 
-
 data class Teste(
     val nome: String,
     val sobrenome: String,
 ) {
 
 }
-// TODO - 1 fazer melhoria nas querys (eliminar código repetido nas funções)
-
 // TODO - 2 CRIAR CLASSES DE REPOSITÓRIO PARA Customer, Account e Transaction - Exemplo: CustomerRepository - Anotar como @Component

@@ -1,35 +1,38 @@
 package com.example.mentoriabank.dao
 
-import java.sql.Connection
-import java.util.UUID
+import com.example.mentoriabank.model.Transaction
 
-class TransactionDAO(connection: Connection) {
-    private val connection = connection
+class TransactionDAO(
+    private val executor: ExecutorDAO,
+    private val account: AccountDAO,
+) {
 
-    fun create(){
-        val statement = connection.createStatement()
-        statement.execute("CREATE TABLE IF NOT EXISTS `TRANSACTION`(id int AUTO_INCREMENT, account_id int, amount float, transaction_type varchar(255), FOREIGN KEY (account_id) REFERENCES ACCOUNT(id), primary key (id))")
-        println("Table TRANSACTION created sucessfully")
-        statement.close()
+    fun create() {
+        executor.execute("CREATE TABLE IF NOT EXISTS `TRANSACTION`(id int AUTO_INCREMENT, account_id int, amount float, transaction_type varchar(255), FOREIGN KEY (account_id) REFERENCES ACCOUNT(id), primary key (id))")
+        println("\nTable TRANSACTION created sucessfully")
     }
 
-    fun insert(accountId: Int, amount: Int){
-        val statement = connection.createStatement()
-        statement.execute("INSERT INTO `TRANSACTION`(account_id, amount, transaction_type) VALUES('$accountId', '$amount', 'DEPOSIT')")
-        //a mudança no balance do account faz aqui?
+    fun insert(accountId: Int, amount: Int) {
+        executor.execute("INSERT INTO `TRANSACTION`(account_id, amount, transaction_type) VALUES('$accountId', '$amount', 'DEPOSIT')")
         findAll()
-        statement.close()
     }
 
-    fun findAll(){
-        var rs = connection.createStatement().executeQuery("SELECT * FROM `TRANSACTION`")
-        println("TRANSACTION TABLE:")
+    fun findAll(): MutableList<Transaction> {
+        val rs = executor.executeQuery("SELECT * FROM `TRANSACTION`")
+        println("\nTRANSACTION TABLE:")
+        val transactions = mutableListOf<Transaction>()
         while (rs.next()) {
-            println("id: ${rs.getString(1)}, account_id: ${rs.getString(2)}, amount: ${rs.getString(3)}, transaction_type: ${rs.getString(4)}")
+            val transaction = Transaction(
+                id = rs.getInt(1),
+                account = account.findById(rs.getInt(2))!!, //TODO Resolver Nullpointer
+                amount = rs.getFloat(3), //TODO Tem muita divergência entre os tipos
+                type = rs.getString(4) //TODO Como pegar uma String e converter em ENUM?
+            )
+            transactions.add(transaction)
         }
         rs.close()
-        //Aqui precisa fechar o statement?
+        transactions.forEach { println(it) }
+        return transactions
     }
-
 
 }
