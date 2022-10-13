@@ -37,12 +37,3 @@ fun main(args: Array<String>) {
         ex.printStackTrace()
     }
 }
-
-
-data class Teste(
-    val nome: String,
-    val sobrenome: String,
-) {
-
-}
-// TODO - 2 CRIAR CLASSES DE REPOSITÓRIO PARA Customer, Account e Transaction - Exemplo: CustomerRepository - Anotar como @Component
